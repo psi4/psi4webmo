@@ -1,0 +1,183 @@
+												<DIV ID="content1" STYLE="height: 100%; visibility: hidden;" CLASS="tabpage">
+													<TABLE CLASS="tabpage" HEIGHT=300 WIDTH=350>
+														<TR>
+															<TD>Job Name</TD>
+															<TD><INPUT TYPE="text" NAME="jobName" WIDTH=100 VALUE="<PERL>$stoichiometry</PERL>"></TD>
+														</TR>
+														
+														<TR>
+															<TD>Calculation</TD>
+															<TD>
+																<SELECT NAME="templateId" ONCHANGE="OnChangeTemplateId(document.form)">
+																	<PERL>&generate_template_list("psi", $username)</PERL>
+																</SELECT><BR>
+															</TD>
+														</TR>
+
+														<TR>
+															<TD>Method</TD>
+															<TD>
+																<SELECT NAME="method" ONCHANGE="OnChangeMethod(document.form)">
+																	<OPTION VALUE="scf" SELECTED>Hartree-Fock
+																	<OPTION VALUE="df-scf">DF-HF
+																	<OPTION VALUE="dft">DFT
+																	<OPTION VALUE="df-mp2">MP2
+                                  <OPTION VALUE="mp4">MP4
+																	<OPTION VALUE="ccsd">CCSD
+																	<OPTION VALUE="ccsd(t)">CCSD(T)
+																	<OPTION VALUE="sapt0">SAPT0
+																	<OPTION VALUE="sapt2">SAPT2
+																	<OPTION VALUE="sapt2+(3)">SAPT2+(3)
+																	<OPTION VALUE="sapt2+3">SAPT2+3
+																</SELECT>
+															</TD>
+														</TR>
+														
+														<TR>
+															<TD>Functional</TD>
+															<TD>
+																<SELECT NAME="functional" ONCHANGE="OnChangeFunctional(document.form)" DISABLED>
+																	<OPTION VALUE="NONE">None
+																	<OPTION VALUE="blyp">BLYP
+																	<OPTION VALUE="b3lyp" SELECTD>B3LYP
+																	<OPTION VALUE="b3lyp-d">B3LYP-D
+																	<OPTION VALUE="b97-D">B97-D
+																	<OPTION VALUE="bp86">BP86
+																	<OPTION VALUE="m05">M05
+																	<OPTION VALUE="m05-2x">M05-2X
+																	<OPTION VALUE="pbe">PBE
+																	<OPTION VALUE="pbe-d">PBE-D
+																</SELECT>
+															</TD>
+														</TR>
+														
+														<TR>
+															<TD>Basis Set</TD>
+															<TD>
+																<SELECT NAME="basisSet" ONCHANGE="OnChangeBasis(document.form)">
+                                  <OPTION VALUE="STO-3G" SELECTED>STO-3G
+																	<OPTION VALUE="cc-pVDZ">cc-pVDZ
+																	<OPTION VALUE="cc-pVTZ">cc-pVTZ
+																	<OPTION VALUE="cc-pVQZ">cc-pVQZ
+																	<OPTION VALUE="jun-cc-pVDZ">jun-cc-pVDZ
+																	<OPTION VALUE="aug-cc-pVDZ">aug-cc-pVDZ
+																	<OPTION VALUE="aug-cc-pVTZ">aug-cc-pVTZ
+																	<OPTION VALUE="aug-cc-pVQZ">aug-cc-pVQZ
+                                  <OPTION VALUE="3-21G">3-21G
+                                  <OPTION VALUE="6-31G">6-31G
+                                  <OPTION VALUE="6-31+G">6-31+G
+                                  <OPTION VALUE="6-31++G">6-31++G
+                                  <OPTION VALUE="6-31G(d)">6-31G*
+                                  <OPTION VALUE="6-31G(d_p)">6-31G**
+                                  <OPTION VALUE="6-31+G(d)">6-31+G*
+                                  <OPTION VALUE="6-31+G(d_p)">6-31+G**
+                                  <OPTION VALUE="6-31++G(d)">6-31++G**
+                                  <OPTION VALUE="6-311G(d)">6-311G*
+                                  <OPTION VALUE="6-311+G(d_p)">6-311+G**
+                                  <OPTION VALUE="6-311++G(d_p)">6-311++G**
+																	<OPTION>Other
+																</SELECT>
+															</TD>
+														</TR>
+																												
+														<TR>
+															<TD>Charge</TD>
+															<TD><INPUT TYPE="text" NAME="charge" WIDTH=100 VALUE="<PERL>$charge</PERL>"></TD>
+														</TR>
+														
+														<TR>
+															<TD>Multiplicity</TD>
+															<TD>
+																<SELECT NAME="multiplicity" ONCHANGE="OnChangeMultiplicity(document.form)" DISABLED>
+																	<OPTION VALUE="1" SELECTED>Singlet
+																	<OPTION VALUE="2">Doublet
+																	<OPTION VALUE="3">Triplet
+																	<OPTION VALUE="4">Quartet
+																	<OPTION VALUE="5">Quintet
+																	<OPTION VALUE="6">Sextet
+																</SELECT>
+															</TD>
+														</TR>
+														
+														<TR>
+															<TD>Reference</TD>
+															<TD>
+																<SELECT NAME="reference" ONCHANGE="OnChangeReference(document.form)">
+																	<OPTION VALUE="rhf" SELECTED>Restricted
+																	<OPTION VALUE="rohf">Restricted Open-Shell
+																	<OPTION VALUE="uhf">Unrestricted
+																</SELECT>
+															</TD>
+														</TR>
+														
+														<TR HEIGHT="100%">
+															<TD ALIGN="left" VALIGN="bottom">
+																<SPAN CLASS="popup" TITLE="Back"><A HREF="javascript:Back(document.form)"><IMG SRC="<PERL>$url_htmlBase</PERL>/images/previous.gif" BORDER=0></A></SPAN>
+															</TD>
+															<TD ALIGN="right" VALIGN="bottom">
+																<SPAN CLASS="popup" TITLE="Continue"><A HREF="javascript:SubmitJob(document.form,false)"><IMG SRC="<PERL>$url_htmlBase</PERL>/images/next.gif" BORDER=0></A></SPAN>
+															</TD>
+														</TR>
+														
+													</TABLE>
+													
+												</DIV>
+												
+												<DIV ID="content2" STYLE="height: 0%; visibility: hidden;" CLASS="tabpage">
+													<TABLE CLASS="tabpage" HEIGHT=300 WIDTH=350>
+														
+														
+														<TR>
+															<TD>Cartesian Coordinates</TD>
+															<TD><INPUT TYPE="checkbox" NAME="cartesianCoordinates" CHECKED></TD>
+														</TR>
+														
+														<TR>
+															<TD>Additional Keywords (comma delim.)</TD>
+															<TD><INPUT TYPE="text" NAME="additionalKeywords" WIDTH=100></TD>
+														</TR>
+														
+														<PERL>'<!--' if ($version !~ /p|e$/)</PERL>
+														<PERL>&generate_custom_variable_list($engine, $username)</PERL>
+														<PERL>'-->' if ($version !~ /p|e$/)</PERL>
+														
+														<TR>
+															<TD COLSPAN=2><HR WIDTH=60% ALIGN=center"></TD>
+														</TR>
+														<PERL SRC="include/run_parallel.html"></PERL>
+														<TR HEIGHT="100%">
+															<TD>&nbsp;</TD>
+															<TD>&nbsp;</TD>
+														</TR>
+													</TABLE>
+														
+													<TABLE WIDTH="100%">
+														<TR HEIGHT="100%">
+															<TD ALIGN="left" VALIGN="bottom">
+																<SPAN CLASS="popup" TITLE="Back"><A HREF="javascript:Back(document.form)"><IMG SRC="<PERL>$url_htmlBase</PERL>/images/previous.gif" BORDER=0></A></SPAN>
+															</TD>
+															<TD ALIGN="center" VALIGN="bottom">
+																<PERL>'<!--' if ($version !~ /p|e$/)</PERL>
+																<INPUT TYPE="button" VALUE="Add templates or variables" ONCLICK="javascript:EditTemplates(document.form, '<PERL>$engine</PERL>')">
+																<PERL>'-->' if ($version !~ /p|e$/)</PERL>
+															</TD>
+															<TD ALIGN="right" VALIGN="bottom">
+																<SPAN CLASS="popup" TITLE="Continue"><A HREF="javascript:SubmitJob(document.form,false)"><IMG SRC="<PERL>$url_htmlBase</PERL>/images/next.gif" BORDER=0></A></SPAN>
+															</TD>
+														</TR>
+														
+													</TABLE>
+													
+												</DIV>
+      <!-- PSI4 specific fields -->
+      <INPUT TYPE="HIDDEN" NAME="dimOpt">
+      <INPUT TYPE="HIDDEN" NAME="dimScanned">
+      <INPUT TYPE="HIDDEN" NAME="scanVar">
+      <INPUT TYPE="HIDDEN" NAME="scanStart">
+      <INPUT TYPE="HIDDEN" NAME="scanStop">
+      <INPUT TYPE="HIDDEN" NAME="scanSteps">
+      <INPUT TYPE="HIDDEN" NAME="scanVar2">
+      <INPUT TYPE="HIDDEN" NAME="scanStart2">
+      <INPUT TYPE="HIDDEN" NAME="scanStop2">
+      <INPUT TYPE="HIDDEN" NAME="scanSteps2">
+

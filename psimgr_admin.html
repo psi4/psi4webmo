@@ -1,0 +1,51 @@
+<HTML>
+	<HEAD><TITLE>WebMO Psi Manager</TITLE>
+		<LINK REL="stylesheet" TYPE="text/css" HREF="<PERL>$url_htmlBase</PERL>/webmo.css" />
+	</HEAD>
+	
+	<BODY>
+		
+		<SCRIPT LANGUAGE="JavaScript" SRC="<PERL>$url_htmlBase</PERL>/javascript/interfacemgr_admin.js">
+		</SCRIPT>
+		
+		<H1>WebMO Psi Manager</H1>
+		
+		<H2><PERL>$externalBatchQueue ? "Queue" : "Server"</PERL> - <PERL>$targetServer</PERL></H2>
+		<PERL>$errorMsg</PERL>
+		<FORM NAME="form" ACTION="<PERL>$url_cgiBase</PERL>/psimgr_admin.cgi" METHOD=POST>
+			<TABLE CLASS="tframe">
+				<TD>
+					<TABLE CLASS="tabpage" BORDER=0 CELLSPACING=0 CELLPADDING=6>
+						<TR CLASS="header">
+							<TD><B><PERL>$externalBatchQueue ? "Queue" : "Server"</PERL></B></TD>
+							<TD>
+								<SELECT NAME="server">
+									<PERL>&generate_server_list("psi")</PERL>
+								</SELECT>
+								<INPUT TYPE="button" VALUE="Change" ONCLICK="ChangeServer(document.form)">
+							</TD>
+						</TR>
+						<TR>
+							<TD><B>Psi version</B></TD>
+							<TD><INPUT TYPE="text" NAME="psiVersion" VALUE="<PERL>$psiVersion</PERL>" SIZE=50></TD>
+						</TR>
+						<TR>
+							<TD><B>Psi directory</B></TD>
+							<TD><INPUT TYPE="text" NAME="psiBase" VALUE="<PERL>$psiBase</PERL>" SIZE=50></TD>
+						</TR>
+						<PERL SRC="include/config_parallel.html"></PERL>
+					</TABLE>
+				</TD>
+			</TABLE>
+			<P>
+			<INPUT TYPE="button" VALUE="Submit" ONCLICK="ChangeGlobals(document.form)">
+			<INPUT TYPE="button" VALUE="Help" ONCLICK="javascript:window.open('<PERL>$url_htmlBase</PERL>/help/admin_help.html#enginemgr')">
+			<INPUT TYPE="button" VALUE="Return" ONCLICK="Return(document.form)">
+			
+			<P>
+			
+			<INPUT TYPE="hidden" NAME="operation">
+			<INPUT TYPE="hidden" NAME="targetServer" VALUE="<PERL>$targetServer</PERL>">
+		</FORM>
+	</BODY>
+</HTML>

@@ -1,0 +1,260 @@
+Molecular Energy
+memory 1024 mb
+
+molecule {
+[%IF multiplicity == "" -%]$charge 1
+[%ELSE-%]$charge $multiplicity\n[%END-%]
+$geometry
+}
+
+[%IF method == "sapt0" %]auto_fragments('')[%END-%]
+[%IF method == "sapt2" %]auto_fragments('')[%END-%]
+[%IF method == "sapt2+(3)" %]auto_fragments('')[%END-%]
+[%IF method == "sapt2+3" %]auto_fragments('')[%END-%]
+
+set globals {
+[%IF method == "ccsd" -%]scf_type pk
+[%ELSIF method == "ccsd(t)" -%]scf_type pk
+[%ELSIF method == "scf" -%]scf_type pk
+[%ELSIF method == "mp2" -%]scf_type pk
+[%ELSIF method == "mp4" -%]scf_type pk
+[%ELSE-%]scf_type df\n[%END-%]
+basis $basisSet
+[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
+[%ELSIF functional == '' -%]reference $reference
+[%ELSIF reference == "rhf" -%]reference rks
+[%ELSIF reference == "rohf" -%]reference roks
+[%ELSIF reference == "uhf" -%]reference uks[%END-%]
+
+}
+
+basis {
+  assign cc-pVDZ-jkfit df_basis_scf
+  assign NA cc-pVDZ-RI df_basis_scf
+}
+
+[%IF method == "dft" -%]energy('$functional')
+[%ELSIF method == "df-scf" -%]energy('scf')
+[%ELSE-%]energy('$method')\n[%END-%]
+oe = OEProp()
+oe.add("MULLIKEN_CHARGES")
+oe.compute()
+print_variables()
+========================================
+Geometry Optimization
+memory 1024 mb
+
+molecule {
+[%IF multiplicity == "" -%]$charge 1
+[%ELSE-%]$charge $multiplicity\n[%END-%]
+$geometry
+
+symmetry c1
+}
+
+set globals {
+[%IF method == "ccsd" -%]scf_type pk
+[%ELSIF method == "ccsd(t)" -%]scf_type pk
+[%ELSIF method == "scf" -%]scf_type pk
+[%ELSIF method == "mp2" -%]scf_type pk
+[%ELSIF method == "mp4" -%]scf_type pk
+[%ELSE-%]scf_type df\n[%END-%]
+basis $basisSet
+$additionalKeywords
+[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
+[%ELSIF functional == '' -%]reference $reference
+[%ELSIF reference == "rhf" -%]reference rks
+[%ELSIF reference == "rohf" -%]reference roks
+[%ELSIF reference == "uhf" -%]reference uks[%END-%]
+}
+
+basis {
+  assign cc-pVDZ-jkfit df_basis_scf
+  assign NA cc-pVDZ-RI df_basis_scf
+}
+
+[%IF method == "dft" -%]optimize('$functional')
+[%ELSIF method == "df-scf" -%]optimize('scf')
+[%ELSE-%]optimize('$method')\n[%END-%]
+oe = OEProp()
+oe.add("MULLIKEN_CHARGES")
+oe.compute()
+print_variables()
+========================================
+Vibrational Frequencies
+memory 1024 mb
+
+molecule {
+[%IF multiplicity == "" -%]$charge 1
+[%ELSE-%]$charge $multiplicity\n[%END-%]
+$geometry
+}
+
+set globals {
+[%IF method == "ccsd" -%]scf_type pk
+[%ELSIF method == "ccsd(t)" -%]scf_type pk
+[%ELSIF method == "scf" -%]scf_type pk
+[%ELSIF method == "mp2" -%]scf_type pk
+[%ELSIF method == "mp4" -%]scf_type pk
+[%ELSE-%]scf_type df\n[%END-%]
+basis $basisSet
+$additionalKeywords
+[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
+[%ELSIF functional == '' -%]reference $reference
+[%ELSIF reference == "rhf" -%]reference rks
+[%ELSIF reference == "rohf" -%]reference roks
+[%ELSIF reference == "uhf" -%]reference uks[%END-%]
+}
+
+basis {
+  assign cc-pVDZ-jkfit df_basis_scf
+  assign NA cc-pVDZ-RI df_basis_scf
+}
+
+[%IF method == "dft" -%]frequencies('$functional')
+[%ELSIF method == "df-scf" -%]frequencies('scf')
+[%ELSE-%]frequencies('$method')\n[%END-%]
+oe = OEProp()
+oe.add("MULLIKEN_CHARGES")
+oe.compute()
+print_variables()
+========================================
+Optimize and Frequencies
+memory 1024 mb
+
+molecule {
+[%IF multiplicity == "" -%]$charge 1
+[%ELSE-%]$charge $multiplicity\n[%END-%]
+$geometry
+}
+
+set globals {
+[%IF method == "ccsd" -%]scf_type pk
+[%ELSIF method == "ccsd(t)" -%]scf_type pk
+[%ELSIF method == "scf" -%]scf_type pk
+[%ELSIF method == "mp2" -%]scf_type pk
+[%ELSIF method == "mp4" -%]scf_type pk
+[%ELSE-%]scf_type df\n[%END-%]
+basis $basisSet
+$additionalKeywords
+[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
+[%ELSIF functional == '' -%]reference $reference
+[%ELSIF reference == "rhf" -%]reference rks
+[%ELSIF reference == "rohf" -%]reference roks
+[%ELSIF reference == "uhf" -%]reference uks[%END-%]
+}
+
+basis {
+  assign cc-pVDZ-jkfit df_basis_scf
+  assign NA cc-pVDZ-RI df_basis_scf
+}
+
+[%IF method == "dft" -%]optimize('$functional')
+[%ELSIF method == "df-scf" -%]optimize('scf')
+[%ELSE-%]optimize('$method')\n[%END-%]
+[%IF method == "dft" -%]frequencies('$functional')
+[%ELSIF method == "df-scf" -%]frequencies('scf')
+[%ELSE-%]frequencies('$method')\n[%END-%]
+oe = OEProp()
+oe.add("MULLIKEN_CHARGES")
+oe.compute()
+print_variables()
+========================================
+Molecular Orbitals 
+memory 1024 mb
+
+molecule {
+[%IF multiplicity == "" -%]$charge 1
+[%ELSE-%]$charge $multiplicity\n[%END-%]
+$geometry
+}
+
+set globals {
+[%IF method == "ccsd" -%]scf_type pk
+[%ELSIF method == "ccsd(t)" -%]scf_type pk
+[%ELSIF method == "scf" -%]scf_type pk
+[%ELSIF method == "mp2" -%]scf_type pk
+[%ELSIF method == "mp4" -%]scf_type pk
+[%ELSE-%]scf_type df\n[%END-%]
+basis $basisSet
+$additionalKeywords
+[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
+[%ELSIF functional == '' -%]reference $reference
+[%ELSIF reference == "rhf" -%]reference rks
+[%ELSIF reference == "rohf" -%]reference roks
+[%ELSIF reference == "uhf" -%]reference uks[%END-%]
+
+MOLDEN_WRITE true
+WRITER_FILE_LABEL output
+print_mos true
+}
+
+basis {
+  assign cc-pVDZ-jkfit df_basis_scf
+  assign NA cc-pVDZ-RI df_basis_scf
+}
+
+[%IF method == "dft" -%]energy('$functional')
+[%ELSIF method == "df-scf" -%]energy('scf')
+[%ELSE-%]energy('$method')\n[%END-%]
+oe = OEProp()
+oe.add("MULLIKEN_CHARGES")
+oe.compute()
+print_variables()
+========================================
+Coordinate Scan
+memory 1024 mb
+
+molecule webmoMolecule{
+[%IF multiplicity == "" -%]$charge 1
+[%ELSE-%]$charge $multiplicity\n[%END-%]
+$geometry
+}
+
+set globals {
+[%IF method == "ccsd" -%]scf_type pk
+[%ELSIF method == "ccsd(t)" -%]scf_type pk
+[%ELSIF method == "scf" -%]scf_type pk
+[%ELSIF method == "mp2" -%]scf_type pk
+[%ELSIF method == "mp4" -%]scf_type pk
+[%ELSE-%]scf_type df\n[%END-%]
+basis $basisSet
+$additionalKeywords
+[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
+[%ELSIF functional == '' -%]reference $reference
+[%ELSIF reference == "rhf" -%]reference rks
+[%ELSIF reference == "rohf" -%]reference roks
+[%ELSIF reference == "uhf" -%]reference uks[%END-%]
+}
+
+basis {
+  assign cc-pVDZ-jkfit df_basis_scf
+  assign NA cc-pVDZ-RI df_basis_scf
+}
+
+
+[%IF dimScanned == 1-%]
+s1vals = [x*$scanInc+$scanStart for x in range(int(round(abs($scanStop-$scanStart)/$scanInc))+1)]
+result_table = Table(rows=("Values"),cols=("Energies"))
+for value in s1vals:
+  webmoMolecule.$scanVar = value
+[%IF method == "dft" -%]  result_table[value] = energy('$functional')
+[%ELSIF method == "df-scf" -%]  result_table[value] = energy('scf')
+[%ELSE-%]  result_table[value] = energy('$method')\n[%END-%]
+[%END-%]
+[%IF dimScanned == 2-%]
+result_table = Table(rows=("Values"), cols=("Energies"))
+s1vals = [x*$scanInc+$scanStart for x in range(int(round(abs($scanStop-$scanStart)/$scanInc))+1)]
+s2vals = [x*$scanInc2+$scanStart2 for x in range(int(round(abs($scanStop2-$scanStart2)/$scanInc2))+1)]
+for value in s1vals:
+  webmoMolecule.$scanVar = value
+  for value2 in s2vals:
+    webmoMolecule.$scanVar2 = value2
+[%IF method == "dft" -%]    result_table[value][value2] = energy('$functional')
+[%ELSIF method == "df-scf" -%]    result_table[value][value2] = energy('scf')
+[%ELSE-%]    result_table[value][value2] = energy('$method')\n[%END-%]
+
+[%END-%]
+print_out(str(result_table))
+========================================
