@@ -1,10 +1,5 @@
 #!/usr/bin/perl
 
-# This script is copyright (c) 2014 by WebMO, LLC, all rights reserved.
-# Its use is subject to the license agreement that can be found at the following
-# URL:  http://www.webmo.net/license
-
-
 $require++;
 require("parse_output.cgi");
 $require--;
@@ -62,13 +57,15 @@ sub parse_psi_geometry
 {
   local ($logfileName, *logfileText) = @_;
 
+  $i = search_from_beginning('Number of atoms', \@logfileText);
+  ($natom) = /(\d+)/;
+  
+  return unless ($natom > 0);
+  
   my $outputXYZFileName = $logfileName;
   $outputXYZFileName =~ s/[^\/]+$/output\.xyz/;
   open(outputXYZ, ">$outputXYZFileName");
   
-  $i = search_from_beginning('Number of atoms', \@logfileText);
-  ($natom) = /(\d+)/;
-
   $i = search_from_end('Cartesian Geometry', \@logfileText);
   if (($i != -1))
   {

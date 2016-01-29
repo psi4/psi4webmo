@@ -29,11 +29,6 @@ basis $basisSet
 
 }
 
-basis {
-  assign cc-pVDZ-jkfit df_basis_scf
-  assign NA cc-pVDZ-RI df_basis_scf
-}
-
 [%IF method == "dft" -%]energy('$functional')
 [%ELSIF method == "df-scf" -%]energy('scf')
 [%ELSE-%]energy('$method')\n[%END-%]
@@ -69,10 +64,6 @@ $additionalKeywords
 [%ELSIF reference == "uhf" -%]reference uks[%END-%]
 }
 
-basis {
-  assign cc-pVDZ-jkfit df_basis_scf
-  assign NA cc-pVDZ-RI df_basis_scf
-}
 
 [%IF method == "dft" -%]optimize('$functional')
 [%ELSIF method == "df-scf" -%]optimize('scf')
@@ -107,10 +98,6 @@ $additionalKeywords
 [%ELSIF reference == "uhf" -%]reference uks[%END-%]
 }
 
-basis {
-  assign cc-pVDZ-jkfit df_basis_scf
-  assign NA cc-pVDZ-RI df_basis_scf
-}
 
 [%IF method == "dft" -%]frequencies('$functional')
 [%ELSIF method == "df-scf" -%]frequencies('scf')
@@ -145,10 +132,6 @@ $additionalKeywords
 [%ELSIF reference == "uhf" -%]reference uks[%END-%]
 }
 
-basis {
-  assign cc-pVDZ-jkfit df_basis_scf
-  assign NA cc-pVDZ-RI df_basis_scf
-}
 
 [%IF method == "dft" -%]optimize('$functional')
 [%ELSIF method == "df-scf" -%]optimize('scf')
@@ -190,10 +173,6 @@ WRITER_FILE_LABEL output
 print_mos true
 }
 
-basis {
-  assign cc-pVDZ-jkfit df_basis_scf
-  assign NA cc-pVDZ-RI df_basis_scf
-}
 
 [%IF method == "dft" -%]energy('$functional')
 [%ELSIF method == "df-scf" -%]energy('scf')
@@ -226,11 +205,6 @@ $additionalKeywords
 [%ELSIF reference == "rhf" -%]reference rks
 [%ELSIF reference == "rohf" -%]reference roks
 [%ELSIF reference == "uhf" -%]reference uks[%END-%]
-}
-
-basis {
-  assign cc-pVDZ-jkfit df_basis_scf
-  assign NA cc-pVDZ-RI df_basis_scf
 }
 
 

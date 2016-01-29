@@ -1,10 +1,5 @@
 #!/usr/bin/perl
 
-# This script is copyright (c) 2014 by WebMO, LLC, all rights reserved.
-# Its use is subject to the license agreement that can be found at the following
-# URL:  http://www.webmo.net/license
-
-
 use ParsedHTML;
 
 $require++;

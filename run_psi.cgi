@@ -1,10 +1,5 @@
 #!/usr/bin/perl
 
-# This script is copyright (c) 2014 by WebMO, LLC, all rights reserved.
-# Its use is subject to the license agreement that can be found at the following
-# URL:  http://www.webmo.net/license
-
-
 my ($jobNumber, $jobOwner, $queue) = @ARGV;
 
 $require++;
@@ -26,7 +21,8 @@ unless (-e $jobScratch) {
 }
 
 $ENV{'HOME'}=$jobScratch;
-$ENV{'PATH'} = $ENV{'PATH'} . ":$psiBase/bin";
+#PSI must be FIRST in path -- otherwise we will likely run the wrong (system) Perl version
+$ENV{'PATH'} = "$psiBase/bin:" . $ENV{'PATH'};
 
 # if we are using PBS, find out which host we are running on
 if ($externalBatchQueue)
