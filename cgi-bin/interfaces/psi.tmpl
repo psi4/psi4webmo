@@ -5,38 +5,53 @@ molecule {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
+
+[%IF enableSymmetry-%]
+[%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-[%IF method == "sapt0" %]auto_fragments('')[%END-%]
-[%IF method == "sapt2" %]auto_fragments('')[%END-%]
-[%IF method == "sapt2+(3)" %]auto_fragments('')[%END-%]
-[%IF method == "sapt2+3" %]auto_fragments('')[%END-%]
 
-set globals {
-[%IF method == "ccsd" -%]scf_type pk
-[%ELSIF method == "ccsd(t)" -%]scf_type pk
-[%ELSIF method == "scf" -%]scf_type pk
-[%ELSIF method == "mp2" -%]scf_type pk
-[%ELSIF method == "mp4" -%]scf_type pk
-[%ELSE-%]scf_type df\n[%END-%]
-basis $basisSet
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%ELSE-%]set scf_type df\n[%END-%]
+set basis $basisSet
+[%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
+[%ELSIF functional == '' -%]set reference $reference
+[%ELSIF reference == "rhf" -%]set reference rks
+[%ELSIF reference == "rohf" -%]set reference roks
+[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
-[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
-[%ELSIF functional == '' -%]reference $reference
-[%ELSIF reference == "rhf" -%]reference rks
-[%ELSIF reference == "rohf" -%]reference roks
-[%ELSIF reference == "uhf" -%]reference uks[%END-%]
-
-}
 
 [%IF method == "dft" -%]energy('$functional')
-[%ELSIF method == "df-scf" -%]energy('scf')
 [%ELSE-%]energy('$method')\n[%END-%]
 oe = OEProp()
 oe.add("MULLIKEN_CHARGES")
 oe.compute()
 print_variables()
 ========================================
+SAPT
+memory 1024 mb
+
+molecule {
+[%IF multiplicity == "" -%]$charge 1
+[%ELSE-%]$charge $multiplicity\n[%END-%]
+$geometry
+
+[%IF enableSymmetry-%]
+[%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
+}
+
+auto_fragments('')
+
+set basis $basisSet
+[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+
+energy("$method")
+oe = OEProp()
+oe.add("MULLIKEN_CHARGES")
+oe.compute()
+print_variables()
+===================================
 Geometry Optimization
 memory 1024 mb
 
@@ -45,28 +60,54 @@ molecule {
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
 
-symmetry c1
+[%IF enableSymmetry-%]
+[%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-set globals {
-[%IF method == "ccsd" -%]scf_type pk
-[%ELSIF method == "ccsd(t)" -%]scf_type pk
-[%ELSIF method == "scf" -%]scf_type pk
-[%ELSIF method == "mp2" -%]scf_type pk
-[%ELSIF method == "mp4" -%]scf_type pk
-[%ELSE-%]scf_type df\n[%END-%]
-basis $basisSet
-$additionalKeywords
-[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
-[%ELSIF functional == '' -%]reference $reference
-[%ELSIF reference == "rhf" -%]reference rks
-[%ELSIF reference == "rohf" -%]reference roks
-[%ELSIF reference == "uhf" -%]reference uks[%END-%]
-}
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%ELSE-%]set scf_type df\n[%END-%]
+set basis $basisSet
+[%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
+[%ELSIF functional == '' -%]set reference $reference
+[%ELSIF reference == "rhf" -%]set reference rks
+[%ELSIF reference == "rohf" -%]set reference roks
+[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+
+[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
 [%IF method == "dft" -%]optimize('$functional')
-[%ELSIF method == "df-scf" -%]optimize('scf')
+[%ELSE-%]optimize('$method')\n[%END-%]
+oe = OEProp()
+oe.add("MULLIKEN_CHARGES")
+oe.compute()
+print_variables()
+========================================
+Transition State Optimization
+memory 1024 mb
+
+molecule {
+[%IF multiplicity == "" -%]$charge 1
+[%ELSE-%]$charge $multiplicity\n[%END-%]
+$geometry
+
+[%IF enableSymmetry-%]
+[%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
+}
+
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%ELSE-%]set scf_type df\n[%END-%]
+set basis $basisSet
+[%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
+[%ELSIF functional == '' -%]set reference $reference
+[%ELSIF reference == "rhf" -%]set reference rks
+[%ELSIF reference == "rohf" -%]set reference roks
+[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+set opt_type ts
+[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+
+
+[%IF method == "dft" -%]optimize('$functional')
 [%ELSE-%]optimize('$method')\n[%END-%]
 oe = OEProp()
 oe.add("MULLIKEN_CHARGES")
@@ -74,33 +115,31 @@ oe.compute()
 print_variables()
 ========================================
 Vibrational Frequencies
+Vibrational Frequencies
 memory 1024 mb
 
 molecule {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
+
+[%IF enableSymmetry-%]
+[%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-set globals {
-[%IF method == "ccsd" -%]scf_type pk
-[%ELSIF method == "ccsd(t)" -%]scf_type pk
-[%ELSIF method == "scf" -%]scf_type pk
-[%ELSIF method == "mp2" -%]scf_type pk
-[%ELSIF method == "mp4" -%]scf_type pk
-[%ELSE-%]scf_type df\n[%END-%]
-basis $basisSet
-$additionalKeywords
-[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
-[%ELSIF functional == '' -%]reference $reference
-[%ELSIF reference == "rhf" -%]reference rks
-[%ELSIF reference == "rohf" -%]reference roks
-[%ELSIF reference == "uhf" -%]reference uks[%END-%]
-}
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%ELSE-%]set scf_type df\n[%END-%]
+set basis $basisSet
+[%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
+[%ELSIF functional == '' -%]set reference $reference
+[%ELSIF reference == "rhf" -%]set reference rks
+[%ELSIF reference == "rohf" -%]set reference roks
+[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+
+[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
 [%IF method == "dft" -%]frequencies('$functional')
-[%ELSIF method == "df-scf" -%]frequencies('scf')
 [%ELSE-%]frequencies('$method')\n[%END-%]
 oe = OEProp()
 oe.add("MULLIKEN_CHARGES")
@@ -114,30 +153,26 @@ molecule {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
+
+[%IF enableSymmetry-%]
+[%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-set globals {
-[%IF method == "ccsd" -%]scf_type pk
-[%ELSIF method == "ccsd(t)" -%]scf_type pk
-[%ELSIF method == "scf" -%]scf_type pk
-[%ELSIF method == "mp2" -%]scf_type pk
-[%ELSIF method == "mp4" -%]scf_type pk
-[%ELSE-%]scf_type df\n[%END-%]
-basis $basisSet
-$additionalKeywords
-[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
-[%ELSIF functional == '' -%]reference $reference
-[%ELSIF reference == "rhf" -%]reference rks
-[%ELSIF reference == "rohf" -%]reference roks
-[%ELSIF reference == "uhf" -%]reference uks[%END-%]
-}
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%ELSE-%]set scf_type df\n[%END-%]
+set basis $basisSet
+[%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
+[%ELSIF functional == '' -%]set reference $reference
+[%ELSIF reference == "rhf" -%]set reference rks
+[%ELSIF reference == "rohf" -%]set reference roks
+[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+
+[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
 [%IF method == "dft" -%]optimize('$functional')
-[%ELSIF method == "df-scf" -%]optimize('scf')
 [%ELSE-%]optimize('$method')\n[%END-%]
 [%IF method == "dft" -%]frequencies('$functional')
-[%ELSIF method == "df-scf" -%]frequencies('scf')
 [%ELSE-%]frequencies('$method')\n[%END-%]
 oe = OEProp()
 oe.add("MULLIKEN_CHARGES")
@@ -151,31 +186,27 @@ molecule {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
+
+[%IF enableSymmetry-%]
+[%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-set globals {
-[%IF method == "ccsd" -%]scf_type pk
-[%ELSIF method == "ccsd(t)" -%]scf_type pk
-[%ELSIF method == "scf" -%]scf_type pk
-[%ELSIF method == "mp2" -%]scf_type pk
-[%ELSIF method == "mp4" -%]scf_type pk
-[%ELSE-%]scf_type df\n[%END-%]
-basis $basisSet
-$additionalKeywords
-[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
-[%ELSIF functional == '' -%]reference $reference
-[%ELSIF reference == "rhf" -%]reference rks
-[%ELSIF reference == "rohf" -%]reference roks
-[%ELSIF reference == "uhf" -%]reference uks[%END-%]
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%ELSE-%]set scf_type df\n[%END-%]
+set basis $basisSet
+[%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
+[%ELSIF functional == '' -%]set reference $reference
+[%ELSIF reference == "rhf" -%]set reference rks
+[%ELSIF reference == "rohf" -%]set reference roks
+[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+set MOLDEN_WRITE true
+set WRITER_FILE_LABEL output
+set print_mos true
 
-MOLDEN_WRITE true
-WRITER_FILE_LABEL output
-print_mos true
-}
+[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
 [%IF method == "dft" -%]energy('$functional')
-[%ELSIF method == "df-scf" -%]energy('scf')
 [%ELSE-%]energy('$method')\n[%END-%]
 oe = OEProp()
 oe.add("MULLIKEN_CHARGES")
@@ -189,24 +220,21 @@ molecule webmoMolecule{
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
+
+[%IF enableSymmetry-%]
+[%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-set globals {
-[%IF method == "ccsd" -%]scf_type pk
-[%ELSIF method == "ccsd(t)" -%]scf_type pk
-[%ELSIF method == "scf" -%]scf_type pk
-[%ELSIF method == "mp2" -%]scf_type pk
-[%ELSIF method == "mp4" -%]scf_type pk
-[%ELSE-%]scf_type df\n[%END-%]
-basis $basisSet
-$additionalKeywords
-[%IF method == "mp4" AND reference == 'uhf' -%]reference rohf
-[%ELSIF functional == '' -%]reference $reference
-[%ELSIF reference == "rhf" -%]reference rks
-[%ELSIF reference == "rohf" -%]reference roks
-[%ELSIF reference == "uhf" -%]reference uks[%END-%]
-}
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%ELSE-%]set scf_type df\n[%END-%]
+set basis $basisSet
+[%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
+[%ELSIF functional == '' -%]set reference $reference
+[%ELSIF reference == "rhf" -%]set reference rks
+[%ELSIF reference == "rohf" -%]set reference roks
+[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
 
+[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 [%IF dimScanned == 1-%]
 s1vals = [x*$scanInc+$scanStart for x in range(int(round(abs($scanStop-$scanStart)/$scanInc))+1)]
@@ -214,7 +242,6 @@ result_table = Table(rows=("Values"),cols=("Energies"))
 for value in s1vals:
   webmoMolecule.$scanVar = value
 [%IF method == "dft" -%]  result_table[value] = energy('$functional')
-[%ELSIF method == "df-scf" -%]  result_table[value] = energy('scf')
 [%ELSE-%]  result_table[value] = energy('$method')\n[%END-%]
 [%END-%]
 [%IF dimScanned == 2-%]
@@ -226,7 +253,6 @@ for value in s1vals:
   for value2 in s2vals:
     webmoMolecule.$scanVar2 = value2
 [%IF method == "dft" -%]    result_table[value][value2] = energy('$functional')
-[%ELSIF method == "df-scf" -%]    result_table[value][value2] = energy('scf')
 [%ELSE-%]    result_table[value][value2] = energy('$method')\n[%END-%]
 
 [%END-%]

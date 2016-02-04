@@ -53,6 +53,7 @@ sub parse_psi_cpu_time
 
 my $natom = 0;
 my @symbols;
+
 sub parse_psi_geometry
 {
   local ($logfileName, *logfileText) = @_;
@@ -60,6 +61,8 @@ sub parse_psi_geometry
   $i = search_from_beginning('Number of atoms', \@logfileText);
   ($natom) = /(\d+)/;
   
+  print $natom;
+
   return unless ($natom > 0);
   
   my $outputXYZFileName = $logfileName;
@@ -97,8 +100,8 @@ sub parse_psi_geometry
 	$_ = $logfileText[$i];
 	chomp;
 	s/^\s+//;
-
-	for (my $iatom = 0; $iatom < $natom; $iatom++)
+        @words = split;
+	while (scalar(@words) > 2)
 	{
 	  @words = split;
 	  my ($atnum, $x, $y, $z) = @words;
@@ -135,28 +138,29 @@ sub parse_psi_geometry_sequence
   open(outputXYZ, ">$outputXYZFileName");
   my $frame = 1;
   $i = 0;
-  while (($i = search_forward('Structure for next step', $i, \@logfileText)) != -1)
+  while (($i = search_forward('Justin Turney, Rob Parrish, and Andy Simmonett', $i, \@logfileText)) != -1)
   {
-	my $ienergy = search_backward('Current energy   :', $i, \@logfileText);
+	my $ienergy = search_forward('Current energy   :', $i, \@logfileText);
 	$_ = $logfileText[$ienergy];
 
 	my ($a,$b,$c,$energy) = split;
 	$sequence_energies .= "$frame,$energy:";
-	$i = search_forward('Cartesian Geometry', $i, \@logfileText);
-	$_ = $logfileText[++$i];
+	$i = search_forward('Center', $i, \@logfileText);
+	$i = $i + 2;
+	$_ = $logfileText[$i];
 	chomp;
 	print outputXYZ "!Step: $frame (E=$energy)\n";
 	@words = split;
-	while (scalar(@words) == 4)
+	while (scalar(@words) == 5)
 	{
-	 my ($atnum, $x, $y, $z) = @words;
-	 if ($atnum ne "Saving") {
-    print outputXYZ sprintf("%s %12f %12f %12f\n", $atnum, $x, $y, $z);
-   }
+	 	my ($atnum, $x, $y, $z) = @words;
+	 	if ($atnum ne "Saving") {
+         	print outputXYZ sprintf("%s %12f %12f %12f\n", $atnum, $x, $y, $z);
+        	}
 
-   $_ = $logfileText[++$i];
-   @words = split;
-   chomp;
+        	$_ = $logfileText[++$i];
+        	@words = split;
+        	chomp;
 	}
 	$frame++;
 	print outputXYZ "\n";
@@ -236,7 +240,7 @@ sub parse_psi_dipole_moment
 sub parse_psi_energy
 {
 	local ($outputProperties, *logfileText) = @_;
-  $energy_found = 0;
+	$energy_found = 0;
 
 	$i = search_from_end('SCF TOTAL ENERGY', \@logfileText);
 	if ($i != -1) {
@@ -244,7 +248,7 @@ sub parse_psi_energy
 		chomp;
 		my @words = split;
 		print outputProperties "SCF Energy=$words[-1] Hartree\n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
 	$i = search_from_end('MP2 TOTAL ENERGY', \@logfileText);
 	if ($i != -1) {
@@ -252,7 +256,7 @@ sub parse_psi_energy
 		chomp;
 		my @words = split;
 		print outputProperties "MP2 Energy=$words[-1] Hartree\n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
 	$i = search_from_end('MP4 TOTAL ENERGY', \@logfileText);
 	if ($i != -1) {
@@ -260,7 +264,7 @@ sub parse_psi_energy
 		chomp;
 		my @words = split;
 		print outputProperties "MP4 Energy=$words[-1] Hartree\n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
 	$i = search_from_end('CCSD TOTAL ENERGY', \@logfileText);
 	if ($i != -1) {
@@ -268,7 +272,7 @@ sub parse_psi_energy
 		chomp;
 		my @words = split;
 		print outputProperties "CCSD Energy=$words[-1] Hartree\n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
 	$i = search_from_end('CCSD\(T\) TOTAL ENERGY', \@logfileText);
 	if ($i != -1) {
@@ -276,63 +280,63 @@ sub parse_psi_energy
 		chomp;
 		my @words = split;
 		print outputProperties "CCSD(T) Energy=$words[-1] Hartree\n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
 	$i = search_from_end('SAPT DISP ENERGY', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
 		my @words = split;
-    @words[-1] = @words[-1] * 627.5095;
+		@words[-1] = @words[-1] * 627.5095;
 		print outputProperties "Dispersion Energy=$words[-1] kcal/mol \n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
 	$i = search_from_end('SAPT ELST ENERGY', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
 		my @words = split;
-    @words[-1] = @words[-1] * 627.5095;
+		@words[-1] = @words[-1] * 627.5095;
 		print outputProperties "Electrostatics Energy=$words[-1] kcal/mol \n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
 	$i = search_from_end('SAPT EXCH ENERGY', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
 		my @words = split;
-    @words[-1] = @words[-1] * 627.5095;
+		@words[-1] = @words[-1] * 627.5095;
 		print outputProperties "Exchange Energy=$words[-1] kcal/mol \n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
 	$i = search_from_end('SAPT IND ENERGY', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
 		my @words = split;
-    @words[-1] = @words[-1] * 627.5095;
+		@words[-1] = @words[-1] * 627.5095;
 		print outputProperties "Induction Energy=$words[-1] kcal/mol \n";
-    $energy_found = 1;
+		$energy_found = 1;
 	}
-  if ($energy_found == 0) {
-    $i = search_from_end('CURRENT ENERGY', \@logfileText);
-    $_ = $logfileText[$i];
-    chomp;
-    my @words = split;
-    @words[-1] = @words[-1] * 627.5095;
-    print outputProperties "Current Energy=$words[-1] kcal/mol \n";
-  }
+	if ($energy_found == 0) {
+		$i = search_from_end('CURRENT ENERGY', \@logfileText);
+		$_ = $logfileText[$i];
+		chomp;
+		my @words = split;
+		@words[-1] = @words[-1] * 627.5095;
+		print outputProperties "Current Energy=$words[-1] kcal/mol \n";
+	}
 }
 
 sub parse_psi_vibrational_modes
 {
 	local ($outputProperties, *logfileText) = @_;
-  local @symmetries;
-  local @frequencies;
+	local @symmetries;
+	local @frequencies;
 
-  $i = search_from_beginning('Harmonic Frequency', \@logfileText);
-  if($i == -1) {
-	return;
+	$i = search_from_beginning('Harmonic Frequency', \@logfileText);
+	if($i == -1) {
+		return;
   }
   $i+=3;
 
