@@ -242,7 +242,7 @@ sub parse_psi_energy
 	local ($outputProperties, *logfileText) = @_;
 	$energy_found = 0;
 
-	$i = search_from_end('SCF TOTAL ENERGY', \@logfileText);
+	$i = search_from_end('"SCF TOTAL ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -250,7 +250,7 @@ sub parse_psi_energy
 		print outputProperties "SCF Energy=$words[-1] Hartree\n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('MP2 TOTAL ENERGY', \@logfileText);
+	$i = search_from_end('"MP2 TOTAL ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -258,7 +258,7 @@ sub parse_psi_energy
 		print outputProperties "MP2 Energy=$words[-1] Hartree\n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('MP4 TOTAL ENERGY', \@logfileText);
+	$i = search_from_end('"MP4 TOTAL ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -266,7 +266,7 @@ sub parse_psi_energy
 		print outputProperties "MP4 Energy=$words[-1] Hartree\n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('CCSD TOTAL ENERGY', \@logfileText);
+	$i = search_from_end('"CCSD TOTAL ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -274,7 +274,7 @@ sub parse_psi_energy
 		print outputProperties "CCSD Energy=$words[-1] Hartree\n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('CCSD\(T\) TOTAL ENERGY', \@logfileText);
+	$i = search_from_end('"CCSD\(T\) TOTAL ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -282,7 +282,7 @@ sub parse_psi_energy
 		print outputProperties "CCSD(T) Energy=$words[-1] Hartree\n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('SAPT DISP ENERGY', \@logfileText);
+	$i = search_from_end('"SAPT DISP ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -291,7 +291,7 @@ sub parse_psi_energy
 		print outputProperties "Dispersion Energy=$words[-1] kcal/mol \n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('SAPT ELST ENERGY', \@logfileText);
+	$i = search_from_end('"SAPT ELST ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -300,7 +300,7 @@ sub parse_psi_energy
 		print outputProperties "Electrostatics Energy=$words[-1] kcal/mol \n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('SAPT EXCH ENERGY', \@logfileText);
+	$i = search_from_end('"SAPT EXCH ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -309,7 +309,7 @@ sub parse_psi_energy
 		print outputProperties "Exchange Energy=$words[-1] kcal/mol \n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('SAPT IND ENERGY', \@logfileText);
+	$i = search_from_end('"SAPT IND ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
@@ -319,7 +319,7 @@ sub parse_psi_energy
 		$energy_found = 1;
 	}
 	if ($energy_found == 0) {
-		$i = search_from_end('CURRENT ENERGY', \@logfileText);
+		$i = search_from_end('"CURRENT ENERGY"', \@logfileText);
 		$_ = $logfileText[$i];
 		chomp;
 		my @words = split;
