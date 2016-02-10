@@ -58,74 +58,42 @@ sub parse_psi_geometry
 {
   local ($logfileName, *logfileText) = @_;
 
-  $i = search_from_beginning('Number of atoms', \@logfileText);
-  ($natom) = /(\d+)/;
-  
-  print $natom;
-
-  return unless ($natom > 0);
-  
   my $outputXYZFileName = $logfileName;
   $outputXYZFileName =~ s/[^\/]+$/output\.xyz/;
   open(outputXYZ, ">$outputXYZFileName");
-  
-  $i = search_from_end('Cartesian Geometry', \@logfileText);
-  if (($i != -1))
-  {
-	$i += 1;
-	$_ = $logfileText[$i];
-	chomp;  # Delete trailing spaces and newlines
-	s/^\s+\(\s+//;   #Delete leading spaces and parenthesis
-	
-	@words = split;
-	for (my $iatom = 0; $iatom < $natom; $iatom++)
-	{
-	  my ($atnum, $x, $y, $z) = @words;
-    @letters = split('',$atnum);
-    @letters[1] = lc(@letters[1]);
-    $atnum = join('',@letters);
-	  print outputXYZ sprintf("%s %12f %12f %12f\n", $atnum, $x, $y, $z);
 
-	  $_ = $logfileText[++$i];
-	  chomp;  # Delete trailing spaces and newlines
-	  s/^\s+\(\s+//;   #Delete leading spaces and parenthesis
-	  @words = split;
-	}
-	close(outputXYZ);
+  my $i = search_from_beginning('SAPT', \@logfileText);
+  if (($i == -1))
+  {
+  	$i = &search_from_end('Center              X', \@logfileText);
   }
   else
   {
-	$i = search_from_beginning('Center', \@logfileText);
-	$i += 2;
-	$_ = $logfileText[$i];
-	chomp;
-	s/^\s+//;
-        @words = split;
-	while (scalar(@words) > 2)
-	{
-	  @words = split;
-	  my ($atnum, $x, $y, $z) = @words;
-    @letters = split('',$atnum);
-    @letters[1] = lc(@letters[1]);
-    $atnum = join('',@letters);
-	  $x = $x;
-	  $y = $y;
-	  $z = $z;
-	  print outputXYZ sprintf("%s %12f %12f %12f\n", $atnum, $x, $y, $z);
-
-	  $_ = $logfileText[++$i];
-	  chomp;
-	  s/^\s+//;
-	}
-	close(outputXYZ);
+	$i = search_from_beginning('Center              X', \@logfileText);
   }
+  $i = $i + 2;
+  $_ = $logfileText[$i];
+  chomp;
+  @words = split;
+  while (scalar(@words) == 5)
+  {
+   	my ($atnum, $x, $y, $z) = @words;
+   	if ($atnum ne "Saving") {
+   	print outputXYZ sprintf("%s %12f %12f %12f\n", $atnum, $x, $y, $z);
+  	}
+  
+  	$_ = $logfileText[++$i];
+  	@words = split;
+  	chomp;
+  }
+  close(outputXYZ);
 
   my $connectionFileName = $outputXYZFileName;
   $connectionFileName =~ s/output\.xyz/connections/;
 # remake a connection file if required
-#  system("$cgiBase/build_connections.cgi $outputXYZFileName $connectionFileName silent");
+  system("$cgiBase/build_connections.cgi $outputXYZFileName $connectionFileName silent");
 # make this line more like the other interfaces in case it matters -CDS
-    &silent_system("$perlPath build_connections.cgi \"$outputXYZFileName\" \"$connectionFileName\" silent") unless (-e $connectionFileName);
+    #&silent_system("$perlPath build_connections.cgi \"$outputXYZFileName\" \"$connectionFileName\" silent") unless (-e $connectionFileName);
 
 }
 
