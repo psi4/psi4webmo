@@ -22,11 +22,9 @@ set basis $basisSet
 
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
-[%IF method == "dft" -%]energy('$functional')
-[%ELSE-%]energy('$method')\n[%END-%]
-oe = OEProp()
-oe.add("MULLIKEN_CHARGES")
-oe.compute()
+[%IF method == "dft" -%]e, wfn = energy('$functional' return_wfn=True)
+[%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
+oeprop(wfn, "MULLIKEN_CHARGES")
 print_variables()
 ========================================
 SAPT
@@ -46,10 +44,8 @@ auto_fragments('')
 set basis $basisSet
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
-energy("$method")
-oe = OEProp()
-oe.add("MULLIKEN_CHARGES")
-oe.compute()
+e, wfn = energy('$method', return_wfn=True)
+oeprop(wfn, "MULLIKEN_CHARGES")
 print_variables()
 ===================================
 Geometry Optimization
@@ -76,11 +72,9 @@ set basis $basisSet
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
-[%IF method == "dft" -%]optimize('$functional')
-[%ELSE-%]optimize('$method')\n[%END-%]
-oe = OEProp()
-oe.add("MULLIKEN_CHARGES")
-oe.compute()
+[%IF method == "dft" -%]e, wfn = optimize('$functional' return_wfn=True)
+[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
+oeprop(wfn, "MULLIKEN_CHARGES")
 print_variables()
 ========================================
 Transition State Optimization
@@ -107,11 +101,9 @@ set opt_type ts
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
-[%IF method == "dft" -%]optimize('$functional')
-[%ELSE-%]optimize('$method')\n[%END-%]
-oe = OEProp()
-oe.add("MULLIKEN_CHARGES")
-oe.compute()
+[%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
+[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
+oeprop(wfn, "MULLIKEN_CHARGES")
 print_variables()
 ========================================
 Vibrational Frequencies
@@ -139,11 +131,9 @@ set basis $basisSet
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
-[%IF method == "dft" -%]frequencies('$functional')
-[%ELSE-%]frequencies('$method')\n[%END-%]
-oe = OEProp()
-oe.add("MULLIKEN_CHARGES")
-oe.compute()
+[%IF method == "dft" -%]e, wfn =frequencies('$functional', return_wfn=True)
+[%ELSE-%]e, wfn = frequencies('$method', return_wfn=True)\n[%END-%]
+oeprop(wfn, "MULLIKEN_CHARGES")
 print_variables()
 ========================================
 Optimize and Frequencies
@@ -170,13 +160,11 @@ set basis $basisSet
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
-[%IF method == "dft" -%]optimize('$functional')
-[%ELSE-%]optimize('$method')\n[%END-%]
-[%IF method == "dft" -%]frequencies('$functional')
-[%ELSE-%]frequencies('$method')\n[%END-%]
-oe = OEProp()
-oe.add("MULLIKEN_CHARGES")
-oe.compute()
+[%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
+[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
+[%IF method == "dft" -%]e, wfn = frequencies('$functional', return_wfn=True)
+[%ELSE-%]e, wfn = frequencies('$method', return_wfn=True)\n[%END-%]
+oeprop(wfn, "MULLIKEN_CHARGES")
 print_variables()
 ========================================
 Molecular Orbitals 
@@ -206,11 +194,9 @@ set print_mos true
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
 
-[%IF method == "dft" -%]energy('$functional')
-[%ELSE-%]energy('$method')\n[%END-%]
-oe = OEProp()
-oe.add("MULLIKEN_CHARGES")
-oe.compute()
+[%IF method == "dft" -%]e, wfn = energy('$functional' return_wfn=True)
+[%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
+oeprop(wfn, "MULLIKEN_CHARGES")
 print_variables()
 ========================================
 Coordinate Scan

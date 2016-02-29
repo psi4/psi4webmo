@@ -81,7 +81,8 @@ sub parse_psi_geometry
    	if ($atnum ne "Saving") {
    	print outputXYZ sprintf("%s %12f %12f %12f\n", $atnum, $x, $y, $z);
   	}
-  
+  	
+	$natom++;
   	$_ = $logfileText[++$i];
   	@words = split;
   	chomp;
