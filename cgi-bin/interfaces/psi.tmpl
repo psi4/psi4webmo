@@ -1,7 +1,7 @@
 Molecular Energy
 memory 1024 mb
 
-molecule {
+molecule mol {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
@@ -30,7 +30,7 @@ print_variables()
 SAPT
 memory 1024 mb
 
-molecule {
+molecule mol {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
@@ -51,7 +51,7 @@ print_variables()
 Geometry Optimization
 memory 1024 mb
 
-molecule {
+molecule mol {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
@@ -71,6 +71,8 @@ set basis $basisSet
 
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
+mol.update_geometry()
+mol.symmetrize(1e-3)
 
 [%IF method == "dft" -%]e, wfn = optimize('$functional' return_wfn=True)
 [%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
@@ -80,7 +82,7 @@ print_variables()
 Transition State Optimization
 memory 1024 mb
 
-molecule {
+molecule mol {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
@@ -100,6 +102,8 @@ set basis $basisSet
 set opt_type ts
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
+mol.update_geometry()
+mol.symmetrize(1e-3)
 
 [%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
 [%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
@@ -109,7 +113,7 @@ print_variables()
 Vibrational Frequencies
 memory 1024 mb
 
-molecule {
+molecule mol {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
@@ -138,7 +142,7 @@ print_variables()
 Optimize and Frequencies
 memory 1024 mb
 
-molecule {
+molecule mol {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
@@ -158,6 +162,8 @@ set basis $basisSet
 
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
 
+mol.update_geometry()
+mol.symmetrize(1e-3)
 
 [%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
 [%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
@@ -169,7 +175,7 @@ print_variables()
 Molecular Orbitals 
 memory 1024 mb
 
-molecule {
+molecule mol {
 [%IF multiplicity == "" -%]$charge 1
 [%ELSE-%]$charge $multiplicity\n[%END-%]
 $geometry
