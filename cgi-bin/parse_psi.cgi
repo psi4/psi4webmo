@@ -28,7 +28,7 @@ sub parse_psi_version
 sub parse_psi_normal_termination
 {
   local (*logfileText) = @_;
-  return &search_from_end('PSI4 exiting successfully', \@logfileText) != -1;
+  return &search_from_end('PSI4 exiting successfully|Psi4 exiting successfully', \@logfileText) != -1;
 }
 
 sub parse_psi_failure_code
