@@ -40,7 +40,7 @@ $geometry
 [%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-auto_fragments('')
+activate(auto_fragments())
 
 set basis $basisSet
 [%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
