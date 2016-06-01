@@ -91,11 +91,8 @@ sub parse_psi_geometry
 
   my $connectionFileName = $outputXYZFileName;
   $connectionFileName =~ s/output\.xyz/connections/;
-# remake a connection file if required
-  system("$cgiBase/build_connections.cgi $outputXYZFileName $connectionFileName silent");
-# make this line more like the other interfaces in case it matters -CDS
-    #&silent_system("$perlPath build_connections.cgi \"$outputXYZFileName\" \"$connectionFileName\" silent") unless (-e $connectionFileName);
-
+  # remake a connection file if required
+  &silent_system("$perlPath build_connections.cgi \"$outputXYZFileName\" \"$connectionFileName\" silent") unless (-e $connectionFileName);
 }
 
 sub parse_psi_geometry_sequence
