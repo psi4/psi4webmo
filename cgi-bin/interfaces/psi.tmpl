@@ -76,7 +76,7 @@ set basis $basisSet
 mol.update_geometry()
 mol.symmetrize(1e-3)
 
-[%IF method == "dft" -%]e, wfn = optimize('$functional' return_wfn=True)
+[%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
 [%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
