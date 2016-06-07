@@ -460,12 +460,16 @@ sub parse_psi_orbitals
 	$i = search_from_beginning('\[MO\]', \@moldenContents);
 	
 	my $norbital;
+	my @mo_symmetries;
 	my @mo_occupancy;
 	my @mo_energies;
 	my @mo_coefficients;
 	
-	while ( ($i = search_forward('Ene=', $i, \@moldenContents)) != -1)
+	while ( ($i = search_forward('Sym=', $i, \@moldenContents)) != -1)
 	{
+			$_ = $moldenContents[$i++]; chomp;
+			push(@mo_symmetries, (split)[1]);
+			$i = search_forward('Ene=', $i, \@moldenContents);
 			$_ = $moldenContents[$i++]; chomp;
 			push(@mo_energies, (split)[1]);
 			$i = search_forward('Occup=', $i, \@moldenContents);
@@ -474,7 +478,7 @@ sub parse_psi_orbitals
 			
 			$_ = $moldenContents[$i];
 			my @orbital;
-			while (!/Ene=/ && !/^\s*$/ && $i < @moldenContents)
+			while (!/Sym=/ && !/^\s*$/ && $i < @moldenContents)
 			{
 				chomp;
 				my ($index, $coefficient) = split;
@@ -507,7 +511,7 @@ sub parse_psi_orbitals
 	for ($i = 0; $i < $norbital; $i++)
 	{
 		my $mo_index = $i + 1;
-		$data .= "$mo_index,-,$mo_occupancy[$i],$mo_energies[$i] Hartree:";
+		$data .= "$mo_index,$mo_symmetries[$i],$mo_occupancy[$i],$mo_energies[$i] Hartree:";
 	}
 	chop $data;
 	print $outputProperties "Molecular Orbitals=$data\n";	
