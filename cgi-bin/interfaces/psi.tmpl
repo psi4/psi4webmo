@@ -10,6 +10,7 @@ $geometry
 [%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
+[%IF method == "sapt0" OR method == "sapt2" OR method == "sapt2+(3)" OR method == "sapt2+(3)dmp2"-%]activate(auto_fragments())\n[%END-%]
 
 [%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
 [%ELSE-%]set scf_type df\n[%END-%]

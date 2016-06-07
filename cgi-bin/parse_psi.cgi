@@ -62,15 +62,7 @@ sub parse_psi_geometry
   $outputXYZFileName =~ s/[^\/]+$/output\.xyz/;
   open(outputXYZ, ">$outputXYZFileName");
 
-  my $i = search_from_beginning('SAPT', \@logfileText);
-  if (($i == -1))
-  {
-  	$i = &search_from_end('Center              X', \@logfileText);
-  }
-  else
-  {
-	$i = search_from_beginning('Center              X', \@logfileText);
-  }
+  my $i = &search_from_end('Center              X', \@logfileText);
   $i = $i + 2;
   $_ = $logfileText[$i];
   chomp;
@@ -285,6 +277,15 @@ sub parse_psi_energy
 		my @words = split;
 		@words[-1] = @words[-1] * 627.5095;
 		print outputProperties "Induction Energy=$words[-1] kcal/mol \n";
+		$energy_found = 1;
+	}
+	$i = search_from_end('"SAPT ENERGY"', \@logfileText);
+	if ($i != -1) {
+		$_ = $logfileText[$i];
+		chomp;
+		my @words = split;
+		@words[-1] = @words[-1] * 627.5095;
+		print outputProperties "Total Interaction Energy=$words[-1] kcal/mol \n";
 		$energy_found = 1;
 	}
 	if ($energy_found == 0) {
