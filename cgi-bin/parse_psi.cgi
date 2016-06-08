@@ -96,10 +96,15 @@ sub parse_psi_geometry_sequence
   my $sequence_energies;
   return if (search_from_beginning('Optimization Summary', \@logfileText) == -1);
 
+  my $limitline = search_from_beginning('Optimization is complete!', \@logfileText);
+  $_ = $logfileText[$limitline];
+  my ($a,$b,$c,$d,$e,$numsteps,$f,$g) = split;
+  $numsteps++;
+
   open(outputXYZ, ">$outputXYZFileName");
   my $frame = 1;
   $i = 0;
-  while (($i = search_forward('Justin Turney, Rob Parrish, and Andy Simmonett', $i, \@logfileText)) != -1)
+  while ($frame != $numsteps)
   {
 	my $ienergy = search_forward('Current energy   :', $i, \@logfileText);
 	$_ = $logfileText[$ienergy];
