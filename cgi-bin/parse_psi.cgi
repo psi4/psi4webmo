@@ -104,7 +104,7 @@ sub parse_psi_geometry_sequence
   open(outputXYZ, ">$outputXYZFileName");
   my $frame = 1;
   $i = 0;
-  while ($frame != $numsteps)
+  while ($frame != $numsteps && ($i = search_forward('Justin Turney, Rob Parrish, and Andy Simmonett', $i, \@logfileText)) != -1)
   {
 	my $ienergy = search_forward('Current energy   :', $i, \@logfileText);
 	$_ = $logfileText[$ienergy];
