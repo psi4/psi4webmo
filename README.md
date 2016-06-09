@@ -8,3 +8,4 @@ integrating Psi4 with WebMO
 * `cgi-bin/psimgr_admin.cgi`
 * `cgi-bin/run_psi.cgi`
 * `cgi-bin/interfaces/psi.tmpl`
+* `javascript/psi.js`
