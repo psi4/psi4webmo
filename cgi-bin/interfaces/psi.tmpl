@@ -21,7 +21,7 @@ set basis $basisSet
 [%ELSIF reference == "rohf" -%]set reference roks
 [%ELSIF reference == "uhf" -%]set reference uks[%END-%]
 
-[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 [%IF method == "dft" -%]e, wfn = energy('$functional' return_wfn=True)
 [%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
@@ -44,7 +44,7 @@ $geometry
 activate(auto_fragments())
 
 set basis $basisSet
-[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 e, wfn = energy('$method', return_wfn=True)
 oeprop(wfn, "MULLIKEN_CHARGES")
@@ -72,7 +72,7 @@ set basis $basisSet
 [%ELSIF reference == "rohf" -%]set reference roks
 [%ELSIF reference == "uhf" -%]set reference uks[%END-%]
 
-[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 mol.update_geometry()
 mol.symmetrize(1e-3)
@@ -104,7 +104,7 @@ set basis $basisSet
 [%ELSIF reference == "rohf" -%]set reference roks
 [%ELSIF reference == "uhf" -%]set reference uks[%END-%]
 set opt_type ts
-[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 mol.update_geometry()
 mol.symmetrize(1e-3)
@@ -136,7 +136,7 @@ set basis $basisSet
 [%ELSIF reference == "rohf" -%]set reference roks
 [%ELSIF reference == "uhf" -%]set reference uks[%END-%]
 
-[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 
 [%IF method == "dft" -%]e, wfn =frequencies('$functional', return_wfn=True)
@@ -166,7 +166,7 @@ set basis $basisSet
 [%ELSIF reference == "rohf" -%]set reference roks
 [%ELSIF reference == "uhf" -%]set reference uks[%END-%]
 
-[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 mol.update_geometry()
 mol.symmetrize(1e-3)
@@ -203,7 +203,7 @@ set MOLDEN_WRITE true
 set WRITER_FILE_LABEL output
 set print_mos true
 
-[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 
 [%IF method == "dft" -%]e, wfn = energy('$functional' return_wfn=True)
@@ -233,7 +233,7 @@ set basis $basisSet
 [%ELSIF reference == "rohf" -%]set reference roks
 [%ELSIF reference == "uhf" -%]set reference uks[%END-%]
 
-[%IF additionalKeywords != "" -%]$additionalKeywords[%END-%]
+[%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 [%IF dimScanned == 1-%]
 s1vals = [x*$scanInc+$scanStart for x in range(int(round(abs($scanStop-$scanStart)/$scanInc))+1)]
