@@ -65,17 +65,17 @@ sub parse_psi_geometry
   my $i = search_from_beginning('SAPT', \@logfileText);
   if (($i == -1))
   {
-  	$i = &search_from_end('Center              X', \@logfileText);
+  	$i = &search_from_end('Center\s*X', \@logfileText);
   }
   else
   {
-	$i = search_from_beginning('Center              X', \@logfileText);
+	$i = search_from_beginning('Center\s*X', \@logfileText);
   }
   $i = $i + 2;
   $_ = $logfileText[$i];
   chomp;
   @words = split;
-  while (scalar(@words) == 5)
+  while (scalar(@words) >= 4)
   {
    	my ($atnum, $x, $y, $z) = @words;
    	if ($atnum ne "Saving") {
@@ -120,7 +120,7 @@ sub parse_psi_geometry_sequence
 	chomp;
 	print outputXYZ "!Step: $frame (E=$energy)\n";
 	@words = split;
-	while (scalar(@words) == 5)
+	while (scalar(@words) >= 4)
 	{
 	 	my ($atnum, $x, $y, $z) = @words;
 	 	if ($atnum ne "Saving") {
