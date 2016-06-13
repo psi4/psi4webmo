@@ -20,6 +20,7 @@ sub process_psi_output
 {
 	my ($jobNumber) = @_;
 	my @properties = ('geometry_sequence', 'symmetry', 'basis', 'energy', 'dipole_moment', 'partial_charges', 'vibrational_modes', 'orbitals','force','scan');
+	sleep(2);
 	return &process_engine_output($jobNumber, 'psi', 'out', \@properties);
 }
 
@@ -54,11 +55,13 @@ sub read_psi_form_data
 	my @form_variables = keys %form_data;
 	&read_engine_form_data('psi', \@form_variables);
 
-  $scanInc = ($scanStop-$scanStart)/$scanSteps if ($scanSteps != 0);
-  $scanInc2 = ($scanStop2-$scanStart2)/$scanSteps2 if ($scanSteps2 != 0);
+  	$scanInc = ($scanStop-$scanStart)/$scanSteps if ($scanSteps != 0);
+  	$scanInc2 = ($scanStop2-$scanStart2)/$scanSteps2 if ($scanSteps2 != 0);
 
-  &add_sandboxed_var('scanInc', \$scanInc);
-  &add_sandboxed_var('scanInc2', \$scanInc2);
+	$additionalKeywords =~ s/,/\n/g;
+  	&add_sandboxed_var('scanInc', \$scanInc);
+  	&add_sandboxed_var('scanInc2', \$scanInc2);
+	&add_sandboxed_var('additionalKeywords', \$additionalKeywords);
 
 	($geometry,$zvars) = split(/\n\n\s*/, $geometry);
 	chomp $geometry;

@@ -29,7 +29,7 @@
 			if (temp == "SAPT") {
 				form.functional.selectedIndex = 0;
 				form.functional.disabled=true;
-				form.method.selectedIndex = 7;
+				form.method.selectedIndex = 6;
                                 form.basisSet.selectedIndex = 4;
 			}
 			if (temp.substring(0, 5) == "Other")
