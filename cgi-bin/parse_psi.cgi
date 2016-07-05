@@ -284,7 +284,7 @@ sub parse_psi_energy
 		print outputProperties "Induction Energy=$words[-1] kcal/mol \n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('"SAPT ENERGY"', \@logfileText);
+	$i = search_from_end('"SAPT TOTAL ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
