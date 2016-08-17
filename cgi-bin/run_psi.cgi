@@ -52,7 +52,7 @@ elsif($nproc > 1)
   # change directory to the job directory for some output files
   chdir($input_directory);
 
-  my $exec_command = "$psiBase/bin/psi4 -p $jobNumber input.inp output.out -n $nproc";
+  my $exec_command = "$psiBase/bin/psi4 -p $jobNumber -s $jobScratch input.inp output.out -n $nproc";
   print "Executing command: $exec_command\n";
 
   open(STDIN, "<$input_file");
@@ -74,7 +74,7 @@ else
 	# change directory to the job directory for some output files
 	chdir($input_directory);
 	
-	my $exec_command = "$psiBase/bin/psi4 -p $jobNumber input.inp output.out";
+	my $exec_command = "$psiBase/bin/psi4 -p $jobNumber -s $jobScratch input.inp output.out";
 	print "Executing command: $exec_command\n";
 
 	open(STDIN, "<$input_file");
