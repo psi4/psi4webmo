@@ -62,12 +62,12 @@ sub parse_psi_geometry
   $outputXYZFileName =~ s/[^\/]+$/output\.xyz/;
   open(outputXYZ, ">$outputXYZFileName");
 
-  my $i = &search_from_end('Center              X', \@logfileText);
+  my $i = &search_from_end('Center\s*X', \@logfileText);
   $i = $i + 2;
   $_ = $logfileText[$i];
   chomp;
   @words = split;
-  while (scalar(@words) == 5)
+  while (scalar(@words) >= 4)
   {
    	my ($atnum, $x, $y, $z) = @words;
    	if ($atnum ne "Saving") {
@@ -117,7 +117,7 @@ sub parse_psi_geometry_sequence
 	chomp;
 	print outputXYZ "!Step: $frame (E=$energy)\n";
 	@words = split;
-	while (scalar(@words) == 5)
+	while (scalar(@words) >= 4)
 	{
 	 	my ($atnum, $x, $y, $z) = @words;
 	 	if ($atnum ne "Saving") {
@@ -284,7 +284,7 @@ sub parse_psi_energy
 		print outputProperties "Induction Energy=$words[-1] kcal/mol \n";
 		$energy_found = 1;
 	}
-	$i = search_from_end('"SAPT ENERGY"', \@logfileText);
+	$i = search_from_end('"SAPT TOTAL ENERGY"', \@logfileText);
 	if ($i != -1) {
 		$_ = $logfileText[$i];
 		chomp;
