@@ -1,6 +1,10 @@
 function SubmitJob(form,preview)
 {
 	bridge.send("setModelFromBuilder");
+
+        if (form.cartesianCoordinates.checked) getGeometry("XYZFormat", "", form.geometry, false);
+        else getGeometry("PSI4Format", "writeEqualsSign=true", form.geometry, false);
+
 	bridge.send("getProperties",
 
 	function (responseData) {
@@ -17,9 +21,6 @@ function SubmitJob(form,preview)
 		document.form.scanSteps2.value = response.scanSteps2;
 	});
 
-	if (form.cartesianCoordinates.checked) getGeometry("XYZFormat", "", form.geometry, false);
-	else getGeometry("PSI4Format", "writeEqualsSign=true", form.geometry, false);
-	
 	getGeometry("XYZFormat", "writeUnitCell=true", form.cartesian, false);
 	getGeometry("ConnectionFormat", "", form.connections, false);
 	getGeometry("ZMatrixFormat", "", form.zmatrix, false);
