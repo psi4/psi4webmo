@@ -1,12 +1,7 @@
 function SubmitJob(form,preview) {
 	document.moledit.setModel(form.model.value);
-
-        if (form.cartesianCoordinates.checked)
-                getGeometry("XYZFormat", "", form.geometry, false);
-        else
-                getGeometry("PSI4Format", "writeEqualsSign=true", form.geometry, false);
-
 	var response = JSON.parse(document.moledit.getProperties());
+		
 	document.form.dimScanned.value = response.dimScanned;
 	document.form.scanVar.value = response.varScanned;
 	document.form.scanStart.value = response.scanStart;
@@ -16,6 +11,11 @@ function SubmitJob(form,preview) {
 	document.form.scanStart2.value = response.scanStart2;
 	document.form.scanStop2.value = response.scanStop2;
 	document.form.scanSteps2.value = response.scanSteps2;
+	
+	if (form.cartesianCoordinates.checked)
+		getGeometry("XYZFormat", "", form.geometry, false);
+	else
+		getGeometry("PSI4Format", "writeEqualsSign=true", form.geometry, false);
 	
 	getGeometry("XYZFormat", "writeUnitCell=true", form.cartesian, false);
 	getGeometry("ConnectionFormat", "", form.connections, false);
@@ -50,10 +50,16 @@ function OnChangeMethod(form)
 	if (method == 'dft')
 	{
 		form.functional.disabled=false;
-	}
-	else {
+		form.basisSet.selectedIndex = 0;
+		
+	} else if (method == 'sapt0' || method == 'sapt2' || method == 'sapt2+(3)' || method == 'sapt2+(3)dmp2') {
 		form.functional.selectedIndex = 0;
 		form.functional.disabled=true;
+		form.basisSet.selectedIndex = 4;
+	} else { 	
+		form.functional.selectedIndex = 0;
+		form.functional.disabled=true;
+		form.basisSet.selectedIndex = 0;
 	}
 
 }
