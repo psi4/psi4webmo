@@ -23,7 +23,7 @@ set basis $basisSet
 
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
-[%IF method == "dft" -%]e, wfn = energy('$functional' return_wfn=True)
+[%IF method == "dft" -%]e, wfn = energy('$functional', return_wfn=True)
 [%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
@@ -206,7 +206,7 @@ set print_mos true
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 
-[%IF method == "dft" -%]e, wfn = energy('$functional' return_wfn=True)
+[%IF method == "dft" -%]e, wfn = energy('$functional', return_wfn=True)
 [%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
