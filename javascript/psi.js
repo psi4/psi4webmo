@@ -56,7 +56,14 @@ function OnChangeMethod(form)
 		form.functional.selectedIndex = 0;
 		form.functional.disabled=true;
 		form.basisSet.selectedIndex = 4;
-	} else { 	
+	} else if (method == 'ccsd' || method == 'ccsd(t)' || method == 'mp4') 
+	{
+		form.functional.selectedIndex = 0;
+		form.functional.disabled=true;
+		form.basisSet.selectedIndex = 0;
+		form.densityFitting.checked = false;
+	}
+	else { 	
 		form.functional.selectedIndex = 0;
 		form.functional.disabled=true;
 		form.basisSet.selectedIndex = 0;

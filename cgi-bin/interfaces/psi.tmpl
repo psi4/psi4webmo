@@ -12,7 +12,7 @@ $geometry
 
 [%IF method == "sapt0" OR method == "sapt2" OR method == "sapt2+(3)" OR method == "sapt2+(3)dmp2"-%]activate(auto_fragments())\n[%END-%]
 
-[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
 [%ELSE-%]set scf_type df\n[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
@@ -43,6 +43,8 @@ $geometry
 
 activate(auto_fragments())
 
+[%IF densityFitting-%]set scf_type df
+[%ELSE-%]set scf_type pk\n[%END-%]
 set basis $basisSet
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
@@ -63,7 +65,7 @@ $geometry
 [%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
 [%ELSE-%]set scf_type df\n[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
@@ -95,7 +97,7 @@ $geometry
 [%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
 [%ELSE-%]set scf_type df\n[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
@@ -127,7 +129,7 @@ $geometry
 [%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
 [%ELSE-%]set scf_type df\n[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
@@ -157,7 +159,7 @@ $geometry
 [%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
 [%ELSE-%]set scf_type df\n[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
@@ -181,6 +183,9 @@ print_variables()
 ========================================
 Molecular Orbitals 
 memory 1024 mb
+import numpy as np
+import psi4
+import math
 
 molecule mol {
 [%IF multiplicity == "" -%]$charge 1
@@ -191,7 +196,7 @@ $geometry
 [%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
 [%ELSE-%]set scf_type df\n[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
@@ -208,6 +213,54 @@ set print_mos true
 
 [%IF method == "dft" -%]e, wfn = energy('$functional', return_wfn=True)
 [%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
+
+newline = """
+"""
+print_out("Molecular Orbitals with AO's Listed"+newline)
+# Use Andy's handy little AO name helper function
+ao_labels = []
+for s in range(wfn.basisset().nshell()):
+    shell = wfn.basisset().shell(s)
+    center = str(shell.ncenter+1)
+    am = shell.am
+    amchar = shell.amchar
+    basename = '{'+wfn.molecule().symbol(shell.ncenter)+center+'} '+amchar
+    if amchar == 'd' and wfn.basisset().has_puream() == True:
+        for i in range(1,6): ao_labels.append(basename+' '+str(i))
+        continue
+    for j in range(0,am+1):
+        lx = am - j
+        for lz in range(0, j + 1):
+            ly = j - lz
+            ao_labels.append(basename+'x'*lx+'y'*ly+'z'*lz)
+
+evals = list(np.array(wfn.epsilon_a_subset("AO", "OCC")).astype(str))
+coeffs = list(np.array(wfn.Ca_subset("AO", "OCC")).astype(str))
+length = int(math.ceil(len(evals)/6))
+rem = len(evals)%6
+start = 0
+end = 0
+for i in range(length+1):
+    if rem == 0 and i == length: break
+    if rem != 0 and i == length:
+        start = end
+        end = start + rem
+    else:
+        start = i*6
+        end = (i+1)*6
+    lin = "%12s" % (' ')
+    for j in range(start,end): lin+= "%10d" % (j+1)
+    print_out(lin+newline)
+    lin = " "
+    for num in range(start,end): lin+= "%10.3f" % (float(evals[num]))
+    print_out("Eigenvalues: "+lin+newline)
+    for j in range(len(coeffs)):
+        lin = "%3d %5s" % (j+1,ao_labels[j].split()[0])
+        lin += "%5s" % (" ".join(ao_labels[j].split()[1:]))
+        for num in range(start,end): lin+= "%10.5f" % (float(coeffs[j][num]))
+        print_out(lin+newline)
+    print_out(newline)
+
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
@@ -224,7 +277,7 @@ $geometry
 [%ELSE-%]symmetry c1\nno_com\nno_reorient\n[%END-%]
 }
 
-[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4"-%]set scf_type pk
+[%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
 [%ELSE-%]set scf_type df\n[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
