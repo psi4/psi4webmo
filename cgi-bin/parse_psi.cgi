@@ -1,5 +1,10 @@
 #!/usr/bin/perl
 
+# This script is copyright (c) 2014 by WebMO, LLC, all rights reserved.
+# Its use is subject to the license agreement that can be found at the following
+# URL:  http://www.webmo.net/license
+
+
 $require++;
 require("parse_output.cgi");
 require("parse_molden.cgi");
@@ -21,7 +26,8 @@ sub parse_psi_version
   $_ = $logfileText[$i];
   chomp;
 
-  ($version) = $_ =~ m/PSI\d* (.*) Driver/i;
+  #($version) = $_ =~ m/PSI\d* (.*) Driver/i;
+  ($version) = $_ =~ m/Psi\d* (.*)/i;
   return $version;
 
 }
