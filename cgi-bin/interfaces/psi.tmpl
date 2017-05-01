@@ -141,8 +141,8 @@ set basis $basisSet
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 
-[%IF method == "dft" -%]e, wfn =frequencies('$functional', return_wfn=True)
-[%ELSE-%]e, wfn = frequencies('$method', return_wfn=True)\n[%END-%]
+[%IF method == "dft" -%]e, wfn =frequencies('$functional', dertype = 1, return_wfn=True)
+[%ELSE-%]e, wfn = frequencies('$method', dertype = 1, return_wfn=True)\n[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
@@ -175,8 +175,8 @@ mol.symmetrize(1e-3)
 
 [%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
 [%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
-[%IF method == "dft" -%]e, wfn = frequencies('$functional', return_wfn=True)
-[%ELSE-%]e, wfn = frequencies('$method', return_wfn=True)\n[%END-%]
+[%IF method == "dft" -%]e, wfn = frequencies('$functional', dertype = 1, return_wfn=True)
+[%ELSE-%]e, wfn = frequencies('$method', dertype = 1, return_wfn=True)\n[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
@@ -211,6 +211,7 @@ set print_mos true
 [%IF method == "dft" -%]e, wfn = energy('$functional', return_wfn=True)
 [%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
 
+molden(wfn, 'output.molden')
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
