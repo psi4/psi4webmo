@@ -3,7 +3,8 @@ memory 1024 mb
 
 molecule mol {
 [%IF multiplicity == "" -%]$charge 1
-[%ELSE-%]$charge $multiplicity\n[%END-%]
+[%ELSE-%]$charge $multiplicity
+[%END-%]
 $geometry
 
 [%IF enableSymmetry-%]
@@ -13,18 +14,21 @@ $geometry
 [%IF method == "sapt0" OR method == "sapt2" OR method == "sapt2+(3)" OR method == "sapt2+(3)dmp2"-%]activate(auto_fragments())\n[%END-%]
 
 [%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
-[%ELSE-%]set scf_type df\n[%END-%]
+[%ELSE-%]set scf_type df
+[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
 [%ELSIF functional == '' -%]set reference $reference
 [%ELSIF reference == "rhf" -%]set reference rks
 [%ELSIF reference == "rohf" -%]set reference roks
-[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+[%ELSIF reference == "uhf" -%]set reference uks
+[%END-%]
 
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 [%IF method == "dft" -%]e, wfn = energy('$functional', return_wfn=True)
-[%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
+[%ELSE-%]e, wfn = energy('$method', return_wfn=True)
+[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
@@ -34,7 +38,8 @@ memory 1024 mb
 
 molecule mol {
 [%IF multiplicity == "" -%]$charge 1
-[%ELSE-%]$charge $multiplicity\n[%END-%]
+[%ELSE-%]$charge $multiplicity
+[%END-%]
 $geometry
 
 [%IF enableSymmetry-%]
@@ -44,7 +49,8 @@ $geometry
 activate(auto_fragments())
 
 [%IF densityFitting-%]set scf_type df
-[%ELSE-%]set scf_type pk\n[%END-%]
+[%ELSE-%]set scf_type pk
+[%END-%]
 set basis $basisSet
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
@@ -58,7 +64,8 @@ memory 1024 mb
 
 molecule mol {
 [%IF multiplicity == "" -%]$charge 1
-[%ELSE-%]$charge $multiplicity\n[%END-%]
+[%ELSE-%]$charge $multiplicity
+[%END-%]
 $geometry
 
 [%IF enableSymmetry-%]
@@ -66,13 +73,15 @@ $geometry
 }
 
 [%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
-[%ELSE-%]set scf_type df\n[%END-%]
+[%ELSE-%]set scf_type df
+[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
 [%ELSIF functional == '' -%]set reference $reference
 [%ELSIF reference == "rhf" -%]set reference rks
 [%ELSIF reference == "rohf" -%]set reference roks
-[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+[%ELSIF reference == "uhf" -%]set reference uks
+[%END-%]
 
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
@@ -80,7 +89,8 @@ mol.update_geometry()
 mol.symmetrize(1e-3)
 
 [%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
-[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
+[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)
+[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
@@ -90,7 +100,8 @@ memory 1024 mb
 
 molecule mol {
 [%IF multiplicity == "" -%]$charge 1
-[%ELSE-%]$charge $multiplicity\n[%END-%]
+[%ELSE-%]$charge $multiplicity
+[%END-%]
 $geometry
 
 [%IF enableSymmetry-%]
@@ -98,13 +109,15 @@ $geometry
 }
 
 [%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
-[%ELSE-%]set scf_type df\n[%END-%]
+[%ELSE-%]set scf_type df
+[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
 [%ELSIF functional == '' -%]set reference $reference
 [%ELSIF reference == "rhf" -%]set reference rks
 [%ELSIF reference == "rohf" -%]set reference roks
-[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+[%ELSIF reference == "uhf" -%]set reference uks
+[%END-%]
 set opt_type ts
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
@@ -112,7 +125,8 @@ mol.update_geometry()
 mol.symmetrize(1e-3)
 
 [%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
-[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
+[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)
+[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
@@ -122,7 +136,8 @@ memory 1024 mb
 
 molecule mol {
 [%IF multiplicity == "" -%]$charge 1
-[%ELSE-%]$charge $multiplicity\n[%END-%]
+[%ELSE-%]$charge $multiplicity
+[%END-%]
 $geometry
 
 [%IF enableSymmetry-%]
@@ -130,19 +145,22 @@ $geometry
 }
 
 [%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
-[%ELSE-%]set scf_type df\n[%END-%]
+[%ELSE-%]set scf_type df
+[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
 [%ELSIF functional == '' -%]set reference $reference
 [%ELSIF reference == "rhf" -%]set reference rks
 [%ELSIF reference == "rohf" -%]set reference roks
-[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+[%ELSIF reference == "uhf" -%]set reference uks
+[%END-%]
 
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
 
 [%IF method == "dft" -%]e, wfn =frequencies('$functional', dertype = 1, return_wfn=True)
-[%ELSE-%]e, wfn = frequencies('$method', dertype = 1, return_wfn=True)\n[%END-%]
+[%ELSE-%]e, wfn = frequencies('$method', dertype = 1, return_wfn=True)
+[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
@@ -152,7 +170,8 @@ memory 1024 mb
 
 molecule mol {
 [%IF multiplicity == "" -%]$charge 1
-[%ELSE-%]$charge $multiplicity\n[%END-%]
+[%ELSE-%]$charge $multiplicity
+[%END-%]
 $geometry
 
 [%IF enableSymmetry-%]
@@ -160,13 +179,15 @@ $geometry
 }
 
 [%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
-[%ELSE-%]set scf_type df\n[%END-%]
+[%ELSE-%]set scf_type df
+[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
 [%ELSIF functional == '' -%]set reference $reference
 [%ELSIF reference == "rhf" -%]set reference rks
 [%ELSIF reference == "rohf" -%]set reference roks
-[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+[%ELSIF reference == "uhf" -%]set reference uks
+[%END-%]
 
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
@@ -174,9 +195,11 @@ mol.update_geometry()
 mol.symmetrize(1e-3)
 
 [%IF method == "dft" -%]e, wfn = optimize('$functional', return_wfn=True)
-[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)\n[%END-%]
+[%ELSE-%]e, wfn = optimize('$method', return_wfn=True)
+[%END-%]
 [%IF method == "dft" -%]e, wfn = frequencies('$functional', dertype = 1, return_wfn=True)
-[%ELSE-%]e, wfn = frequencies('$method', dertype = 1, return_wfn=True)\n[%END-%]
+[%ELSE-%]e, wfn = frequencies('$method', dertype = 1, return_wfn=True)
+[%END-%]
 oeprop(wfn, "MULLIKEN_CHARGES")
 mol.print_out()
 print_variables()
@@ -186,7 +209,8 @@ memory 1024 mb
 
 molecule mol {
 [%IF multiplicity == "" -%]$charge 1
-[%ELSE-%]$charge $multiplicity\n[%END-%]
+[%ELSE-%]$charge $multiplicity
+[%END-%]
 $geometry
 
 [%IF enableSymmetry-%]
@@ -194,22 +218,23 @@ $geometry
 }
 
 [%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
-[%ELSE-%]set scf_type df\n[%END-%]
+[%ELSE-%]set scf_type df
+[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
 [%ELSIF functional == '' -%]set reference $reference
 [%ELSIF reference == "rhf" -%]set reference rks
 [%ELSIF reference == "rohf" -%]set reference roks
-[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+[%ELSIF reference == "uhf" -%]set reference uks
+[%END-%]
 set MOLDEN_WRITE true
 set WRITER_FILE_LABEL output
 set print_mos true
-
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
-
 [%IF method == "dft" -%]e, wfn = energy('$functional', return_wfn=True)
-[%ELSE-%]e, wfn = energy('$method', return_wfn=True)\n[%END-%]
+[%ELSE-%]e, wfn = energy('$method', return_wfn=True)
+[%END-%]
 
 molden(wfn, 'output.molden')
 oeprop(wfn, "MULLIKEN_CHARGES")
@@ -221,7 +246,8 @@ memory 1024 mb
 
 molecule webmoMolecule{
 [%IF multiplicity == "" -%]$charge 1
-[%ELSE-%]$charge $multiplicity\n[%END-%]
+[%ELSE-%]$charge $multiplicity
+[%END-%]
 $geometry
 
 [%IF enableSymmetry-%]
@@ -229,13 +255,15 @@ $geometry
 }
 
 [%IF method == "ccsd" OR method == "ccsd(t)" OR method == "mp4" OR !densityFitting-%]set scf_type pk
-[%ELSE-%]set scf_type df\n[%END-%]
+[%ELSE-%]set scf_type df
+[%END-%]
 set basis $basisSet
 [%IF method == "mp4" AND reference == 'uhf' -%]set reference rohf
 [%ELSIF functional == '' -%]set reference $reference
 [%ELSIF reference == "rhf" -%]set reference rks
 [%ELSIF reference == "rohf" -%]set reference roks
-[%ELSIF reference == "uhf" -%]set reference uks[%END-%]
+[%ELSIF reference == "uhf" -%]set reference uks
+[%END-%]
 
 [%IF additionalKeywords != "" -%]set{\n$additionalKeywords\n}\n[%END-%]
 
@@ -245,7 +273,8 @@ result_table = Table(rows=("Values"),cols=("Energies"))
 for value in s1vals:
   webmoMolecule.$scanVar = value
 [%IF method == "dft" -%]  result_table[value] = energy('$functional')
-[%ELSE-%]  result_table[value] = energy('$method')\n[%END-%]
+[%ELSE-%]  result_table[value] = energy('$method')
+[%END-%]
 [%END-%]
 [%IF dimScanned == 2-%]
 result_table = Table(rows=("Values"), cols=("Energies"))
@@ -256,8 +285,8 @@ for value in s1vals:
   for value2 in s2vals:
     webmoMolecule.$scanVar2 = value2
 [%IF method == "dft" -%]    result_table[value][value2] = energy('$functional')
-[%ELSE-%]    result_table[value][value2] = energy('$method')\n[%END-%]
-
+[%ELSE-%]    result_table[value][value2] = energy('$method')
+[%END-%]
 [%END-%]
 print_out(str(result_table))
 ========================================
