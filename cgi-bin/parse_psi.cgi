@@ -1,9 +1,5 @@
 #!/usr/bin/perl
-
-# This script is copyright (c) 2014 by WebMO, LLC, all rights reserved.
-# Its use is subject to the license agreement that can be found at the following
-# URL:  http://www.webmo.net/license
-
+use lib ".";
 
 $require++;
 require("parse_output.cgi");
@@ -26,8 +22,7 @@ sub parse_psi_version
   $_ = $logfileText[$i];
   chomp;
 
-  #($version) = $_ =~ m/PSI\d* (.*) Driver/i;
-  ($version) = $_ =~ m/Psi\d* (.*)/i;
+  ($version) = $_ =~ m/PSI\d* (.*)/i;
   return $version;
 
 }
@@ -69,6 +64,7 @@ sub parse_psi_geometry
   $outputXYZFileName =~ s/[^\/]+$/output\.xyz/;
   open(outputXYZ, ">$outputXYZFileName");
 
+  $natom = 0;
   my $i = &search_from_end('Center\s*X', \@logfileText);
   $i = $i + 2;
   $_ = $logfileText[$i];
@@ -111,7 +107,7 @@ sub parse_psi_geometry_sequence
   open(outputXYZ, ">$outputXYZFileName");
   my $frame = 1;
   $i = 0;
-  while ($frame != $numsteps && ($i = search_forward('Justin Turney, Rob Parrish, and Andy Simmonett', $i, \@logfileText)) != -1)
+  while ($frame != $numsteps && ($i = search_forward('Justin Turney, Rob Parrish', $i, \@logfileText)) != -1)
   {
 	my $ienergy = search_forward('Current energy   :', $i, \@logfileText);
 	$_ = $logfileText[$ienergy];
@@ -313,64 +309,83 @@ sub parse_psi_energy
 sub parse_psi_vibrational_modes
 {
 	local ($outputProperties, *logfileText) = @_;
-	local @symmetries;
-	local @frequencies;
+	
+	my $data = "";
+	my $vibrational_modes=0;
+	my @vibrational_symmetries;
+	my @vibrational_frequencies;
+	my @vibrational_intensities;
+    my @vibrational_modes;
 
-	$i = search_from_beginning('Harmonic Frequency', \@logfileText);
-	if($i == -1) {
-		return;
-  }
-  $i+=3;
-
-  $_ = @logfileText[$i];
-  chomp;
-  @words = split;
-  while(scalar(@words) == 2) {
-	push(@symmetries, $words[0]);
-	push(@frequencies, $words[1]);
-
-	$_ = @logfileText[++$i];
-	chomp;
-	@words = split;
-  }
-  
-  $i += 9;
-  $j = 0;
-  
-
-  while($j < scalar(@symmetries)) {
-	$_ = @logfileText[$i];
-	chomp;
-	@words = split;
-	$k = 1;
-	while(scalar(@words) == 5) {
-	  if($k == 1) {
-		print $outputProperties "Mode".($j+1)."=$k,$words[1],$words[2],$words[3]";
-	  }
-	  else {
-		print $outputProperties ":$k,$words[1],$words[2],$words[3]";
-	  }
-	  $k++;
-	  $_ = @logfileText[++$i];
-	  chomp;
-	  @words = split;
+	
+	$i = search_forward('Harmonic Vibrational Analysis', $i, \@logfileText);
+	next if ($i == -1);
+		
+	while (($i = search_forward('Vibration\s*\d', $i, \@logfileText)) != -1)
+	{
+		$_ = $logfileText[$i];
+		@_ = split;
+		my $modes_in_block = scalar(@_) - 1;
+			
+	
+		$_ = $logfileText[++$i];
+		chomp;
+		#shift off "Freq [cm-^1]" and push the rest onto the array
+		@_ = split; shift; shift;
+		push(@vibrational_frequencies, @_);
+		$vibrational_modes += $modes_in_block;
+		
+		$i = search_forward('Irrep', $i, \@logfileText);
+		$_ = $logfileText[$i];
+		chomp;
+		#extract out the symmetries via fixed length fields (since PSI4 omits some!)
+		@_ = unpack("A27 A20 A20 A20", $_);
+		shift;
+		foreach (@_) {
+			s/^\s+|\s+$//g; #trim whitepaces
+			$_ = "-" if ($_ eq "");
+		}
+		push(@vibrational_symmetries, @_);
+		
+		#skip to vibrational motions
+		$i = search_forward('---', $i, \@logfileText);
+		$i++;
+		my @motions;
+		for (my $atom = 1; $atom <= $natom; $atom++)
+		{
+			for (my $k = 0; $k < $modes_in_block; $k++)
+			{
+				$motions[$k] .= "$atom,";
+			}
+			
+			$_ = $logfileText[$i++];
+			chomp;
+			@_ = split; shift; shift;
+			
+			for (my $k = 0; $k < $modes_in_block; $k++)
+			{
+				my ($x, $y, $z) = (shift, shift, shift);
+				$motions[$k] .= "$x,$y,$z:";
+			}
+		}
+		
+		foreach (@motions) { chop; }
+		push(@vibrational_motions, @motions);			
 	}
-	print $outputProperties "\n";
-	$j++;
-	$i+=4;
-  }
-  
-  $j = 1;
-  while($j < scalar(@symmetries)+1) {
-	if($j == 1) {
-	  print $outputProperties "Vibrational Modes(v2)=$j,$symmetries[$j-1],$frequencies[$j-1],0";
+	
+	for ($i = 0; $i < $vibrational_modes; $i++)
+	{
+		push(@vibrational_intensities, 1.0);
 	}
-	else {
-	  print $outputProperties ":$j,$symmetries[$j-1],$frequencies[$j-1],0";
+										
+	for ($i = 0; $i < $vibrational_modes; $i++)
+	{
+		$data .= ($i+1).",$vibrational_symmetries[$i],$vibrational_frequencies[$i],$vibrational_intensities[$i]:";
+		print $outputProperties "Mode".($i+1)."=$vibrational_motions[$i]\n";
 	}
-	$j++;
-  }
-  print $outputProperties "\n";
+
+	chop $data;
+	print $outputProperties "Vibrational Modes(v2)=$data\n";
 
   return;
 }
